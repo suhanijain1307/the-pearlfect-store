@@ -1,0 +1,191 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type TrackingSummary = 
+ record {
+   currentStatus: text;
+   lastMessage: text;
+   lastUpdatedAt: int;
+   totalEntries: nat;
+   trackingNumber: text;
+ };
+type TrackingEntry = 
+ record {
+   id: text;
+   message: text;
+   status: text;
+   trackingNumber: text;
+   updatedAt: int;
+ };
+type ProductReview = 
+ record {
+   comment: text;
+   createdAt: int;
+   id: text;
+   productId: text;
+   rating: nat;
+   reviewerName: text;
+ };
+type Product = 
+ record {
+   category: text;
+   createdAt: int;
+   description: text;
+   id: text;
+   imageUrl: ExternalBlob;
+   inStock: bool;
+   name: text;
+   price: float64;
+   saleEndDate: opt int;
+   salePrice: opt float64;
+ };
+type OrderItem = 
+ record {
+   price: float64;
+   productId: text;
+   productName: text;
+   quantity: nat;
+ };
+type Order = 
+ record {
+   address: text;
+   couponCode: opt text;
+   createdAt: int;
+   customerName: text;
+   discountAmount: opt float64;
+   id: text;
+   items: vec OrderItem;
+   paymentMethod: text;
+   phone: text;
+   razorpayPaymentId: opt text;
+   status: text;
+   totalAmount: float64;
+   trackingNumber: opt text;
+ };
+type NewsletterSubscriber = 
+ record {
+   email: text;
+   subscribedAt: int;
+ };
+type GalleryPhoto = 
+ record {
+   caption: text;
+   createdAt: int;
+   id: text;
+   imageUrl: ExternalBlob;
+ };
+type ExternalBlob = blob;
+type CustomOrderRequest = 
+ record {
+   contactNumber: text;
+   createdAt: int;
+   designDescription: text;
+   id: text;
+   inspirationImageUrl: opt ExternalBlob;
+   name: text;
+   status: text;
+ };
+type Coupon = 
+ record {
+   code: text;
+   discountPercent: float64;
+   expiryDate: int;
+   id: text;
+   isActive: bool;
+   usageLimit: nat;
+   usedCount: nat;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  _initializeAccessControl: () -> ();
+  addGalleryPhoto: (imageUrl: ExternalBlob, caption: text) -> ();
+  addProduct: (name: text, price: float64, salePrice: opt float64,
+   saleEndDate: opt int, description: text, imageUrl: ExternalBlob, category:
+   text) -> ();
+  addReview: (productId: text, reviewerName: text, rating: nat, comment:
+   text) -> ();
+  applyCoupon: (code: text) -> (Coupon);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  clearAllOrders: () -> ();
+  createCoupon: (code: text, discountPercent: float64, expiryDate: int,
+   usageLimit: nat) -> ();
+  deleteCoupon: (id: text) -> ();
+  deleteGalleryPhoto: (id: text) -> ();
+  deleteProduct: (id: text) -> ();
+  deleteReview: (id: text) -> ();
+  deleteTrackingEntry: (trackingNumber: text, entryId: text) -> ();
+  editTrackingEntry: (trackingNumber: text, entryId: text, newMessage:
+   text) -> ();
+  getAllTrackingSummaries: () -> (vec TrackingSummary) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getCoupons: () -> (vec Coupon) query;
+  getCustomOrders: () -> (vec CustomOrderRequest) query;
+  getGalleryPhotos: () -> (vec GalleryPhoto) query;
+  getNewsletterSubscribers: () -> (vec NewsletterSubscriber) query;
+  getOrderByPhone: (phone: text) -> (vec Order) query;
+  getOrderByTrackingNumber: (trackingNumber: text) -> (opt Order) query;
+  getOrders: () -> (vec Order) query;
+  getProduct: (id: text) -> (Product) query;
+  getProducts: () -> (vec Product) query;
+  getPromoBanner: () ->
+   (opt record {
+          bgColor: text;
+          endDate: int;
+          subText: text;
+          "text": text;
+        }) query;
+  getReviews: (productId: text) -> (vec ProductReview) query;
+  getTrackingHistory: (trackingNumber: text) -> (vec TrackingEntry) query;
+  getTrackingInfo: (trackingNumber: text) ->
+   (record {
+      currentStatus: opt text;
+      history: vec TrackingEntry;
+      lastUpdatedAt: opt int;
+    }) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  placeOrder: (customerName: text, phone: text, address: text, paymentMethod:
+   text, items: vec OrderItem, totalAmount: float64, couponCode: opt text,
+   discountAmount: opt float64, razorpayPaymentId: opt text) -> ();
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  setPromoBanner: ("text": text, subText: text, endDate: int, bgColor:
+   text) -> ();
+  submitCustomOrder: (name: text, contactNumber: text, designDescription:
+   text, inspirationImageUrl: opt ExternalBlob) -> ();
+  subscribeNewsletter: (email: text) -> ();
+  updateCoupon: (couponId: text, _request: Coupon) -> (Coupon);
+  updateCustomOrderStatus: (id: text, status: text) -> ();
+  updateOrderStatus: (id: text, status: text) -> ();
+  updateOrderTracking: (id: text, trackingNumber: text) -> ();
+  updateProduct: (id: text, name: text, price: float64, salePrice:
+   opt float64, saleEndDate: opt int, description: text, imageUrl:
+   ExternalBlob, category: text, inStock: bool) -> ();
+  updateTrackingStatus: (trackingNumber: text, status: text, message:
+   text) -> (TrackingEntry);
+}

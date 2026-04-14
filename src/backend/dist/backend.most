@@ -1,0 +1,162 @@
+// Version: 1.0.0
+type Coupon__100505319 =
+  {
+    code : Text;
+    discountPercent : Float;
+    expiryDate : Int;
+    id : Text;
+    isActive : Bool;
+    usageLimit : Nat;
+    usedCount : Nat
+  };
+type CustomOrderRequest__244952407 =
+  {
+    contactNumber : Text;
+    createdAt : Int;
+    designDescription : Text;
+    id : Text;
+    inspirationImageUrl : ?ExternalBlob__246066408;
+    name : Text;
+    status : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type ExternalBlob__246066408 = Blob;
+type GalleryPhoto__25246558 =
+  {
+    caption : Text;
+    createdAt : Int;
+    id : Text;
+    imageUrl : ExternalBlob__246066408
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewsletterSubscriber__742227594 = {email : Text; subscribedAt : Int};
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OrderItem__592186033 =
+  {price : Float; productId : Text; productName : Text; quantity : Nat};
+type Order__762448211 =
+  {
+    address : Text;
+    couponCode : ?Text;
+    createdAt : Int;
+    customerName : Text;
+    discountAmount : ?Float;
+    id : Text;
+    items : [OrderItem__592186033];
+    paymentMethod : Text;
+    phone : Text;
+    razorpayPaymentId : ?Text;
+    status : Text;
+    totalAmount : Float;
+    trackingNumber : ?Text
+  };
+type ProductReview__852024309 =
+  {
+    comment : Text;
+    createdAt : Int;
+    id : Text;
+    productId : Text;
+    rating : Nat;
+    reviewerName : Text
+  };
+type Product__853085059 =
+  {
+    category : Text;
+    createdAt : Int;
+    description : Text;
+    id : Text;
+    imageUrl : ExternalBlob__246066408;
+    inStock : Bool;
+    name : Text;
+    price : Float;
+    saleEndDate : ?Int;
+    salePrice : ?Float
+  };
+type PromoBanner__408275821 =
+  {
+    bgColor : Text;
+    endDate : Int;
+    isActive : Bool;
+    subText : Text;
+    text : Text
+  };
+type TrackingEntry__285597012 =
+  {
+    id : Text;
+    message : Text;
+    status : Text;
+    trackingNumber : Text;
+    updatedAt : Int
+  };
+type UserProfile__491224006 = {name : Text};
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable couponsMap :
+    {
+      var root : Node__46230540<Text, Coupon__100505319>;
+      var size : Nat__490723111
+    };
+  stable customOrderRequestsMap :
+    {
+      var root : Node__46230540<Text, CustomOrderRequest__244952407>;
+      var size : Nat__490723111
+    };
+  stable galleryPhotosMap :
+    {
+      var root : Node__46230540<Text, GalleryPhoto__25246558>;
+      var size : Nat__490723111
+    };
+  stable newsletterSubscribers :
+    {
+      var root : Node__46230540<Text, NewsletterSubscriber__742227594>;
+      var size : Nat__490723111
+    };
+  stable ordersMap :
+    {
+      var root : Node__46230540<Text, Order__762448211>;
+      var size : Nat__490723111
+    };
+  stable productsMap :
+    {
+      var root : Node__46230540<Text, Product__853085059>;
+      var size : Nat__490723111
+    };
+  stable var promoBanner : ?PromoBanner__408275821;
+  stable reviewsMap :
+    {
+      var root : Node__46230540<Text, ProductReview__852024309>;
+      var size : Nat__490723111
+    };
+  stable trackingEntriesMap :
+    {
+      var root :
+        Node__46230540<Text, List__415060402<TrackingEntry__285597012>>;
+      var size : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__491224006>;
+      var size : Nat__490723111
+    }
+};

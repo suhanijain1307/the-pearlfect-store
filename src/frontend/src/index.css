@@ -1,0 +1,206 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Cream background - warm light cream */
+    --background: 97.5 0.01 85;
+    /* Foreground - deep warm brown */
+    --foreground: 0 0 0;
+
+    /* Card - pearl white */
+    --card: 98 0.008 80;
+    --card-foreground: 0 0 0;
+
+    /* Popover */
+    --popover: 98 0.008 80;
+    --popover-foreground: 0 0 0;
+
+    /* Primary - champagne gold */
+    --primary: 75 0.12 80;
+    --primary-foreground: 0 0 0;
+
+    /* Secondary - blush pink */
+    --secondary: 15 0.07 85;
+    --secondary-foreground: 0 0 0;
+
+    /* Muted - very soft beige */
+    --muted: 90 0.015 80;
+    --muted-foreground: 0 0 0;
+
+    /* Accent - rose gold */
+    --accent: 20 0.09 72;
+    --accent-foreground: 0 0 0;
+
+    /* Destructive */
+    --destructive: 25 0.25 40;
+    --destructive-foreground: 98 0.005 95;
+
+    /* Border - soft warm */
+    --border: 85 0.02 78;
+    --input: 85 0.02 78;
+    --ring: 75 0.12 80;
+
+    --radius: 0.75rem;
+
+    /* Charts */
+    --chart-1: 75 0.12 80;
+    --chart-2: 15 0.07 75;
+    --chart-3: 20 0.09 65;
+    --chart-4: 85 0.04 70;
+    --chart-5: 30 0.06 50;
+
+    /* Sidebar */
+    --sidebar: 97 0.01 82;
+    --sidebar-foreground: 0 0 0;
+    --sidebar-primary: 75 0.12 80;
+    --sidebar-primary-foreground: 0 0 0;
+    --sidebar-accent: 15 0.07 85;
+    --sidebar-accent-foreground: 0 0 0;
+    --sidebar-border: 85 0.02 78;
+    --sidebar-ring: 75 0.12 80;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "DM Sans", sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Playfair Display", serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Playfair Display", serif;
+  }
+  .font-body {
+    font-family: "DM Sans", sans-serif;
+  }
+}
+
+/* Grain overlay texture */
+.grain-overlay::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.025;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  z-index: 9999;
+}
+
+/* Product card hover */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px oklch(30 0.06 35 / 0.1);
+}
+
+/* Hero gradient */
+.hero-gradient {
+  background: linear-gradient(
+    135deg,
+    oklch(97.5 0.01 85) 0%,
+    oklch(95 0.03 75) 40%,
+    oklch(93 0.04 70) 100%
+  );
+}
+
+/* Gold shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    oklch(75 0.12 80) 0%,
+    oklch(85 0.15 85) 30%,
+    oklch(80 0.18 78) 50%,
+    oklch(85 0.15 85) 70%,
+    oklch(75 0.12 80) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* ============================================================
+   Force all text to black for readability (light mode only)
+   ============================================================ */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+li,
+td,
+th,
+label,
+div,
+a,
+blockquote,
+cite,
+figcaption,
+.text-muted-foreground,
+[class*="text-gray-"],
+[class*="text-stone-"],
+[class*="text-slate-"],
+[class*="text-neutral-"],
+[class*="text-zinc-"],
+[class*="text-amber-"],
+[class*="text-rose-"],
+[class*="text-pink-"] {
+  color: #000000;
+}
+
+/* Preserve white text on dark/colored buttons and badge backgrounds */
+.bg-black *,
+.bg-gray-900 *,
+.bg-amber-500 *,
+.bg-amber-600 *,
+.bg-amber-700 *,
+.bg-rose-500 *,
+.bg-rose-600 *,
+.bg-pink-500 *,
+.bg-green-600 *,
+.bg-blue-600 *,
+.bg-purple-600 *,
+.bg-red-600 *,
+button.bg-black,
+button[class*="bg-amber"],
+button[class*="bg-rose"],
+[class*="badge"] {
+  color: inherit;
+}
